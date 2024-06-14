@@ -24,6 +24,7 @@ const Test = () => {
             inputResolution: { width: 640, height: 480 },
             multiplier: 0.75
         });
+
         const interval = setInterval(() => {
             detect(net);
         }, 100);
