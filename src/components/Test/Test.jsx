@@ -11,8 +11,8 @@ const Test = () => {
     const [counter, setCounter] = useState(0);
     const [stage, setStage] = useState('down');
     const [angle, setAngle] = useState(0);
-    const [canCount, setCanCount] = useState(true);
-
+    const canCountRef = useRef(true); // useRef to manage canCount
+    
     useEffect(() => {
         runPosenet();
     }, []);
@@ -65,15 +65,17 @@ const Test = () => {
             setAngle(angle); 
     
             if (angle > 140) {
-                setStage('down');
-                setCanCount(true);
+                setStage("down");
+                canCountRef.current = true; // Allow counting on the next up
                 console.log('Stage changed to down');
-            } else if (angle < 40 && stage === 'down') {
-                setStage('up');
-                setCounter(prevCounter => prevCounter + 1);
-                setCanCount(false); // Prevent counting until the next down
+            } else if (angle < 50 && stage === 'down' && canCountRef.current) {
+                setStage("up");
+                setCounter(prevCounter => {
+                    console.log('Reps counted:', prevCounter + 1);
+                    return prevCounter + 1;
+                });
+                canCountRef.current = false; // Prevent counting until angle is greater than 140
                 console.log('Stage changed to up');
-                console.log('Reps counted:', counter + 1);
             }
         } else {
             console.log("Key points not detected or not confident enough");
