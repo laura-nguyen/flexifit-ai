@@ -1,0 +1,59 @@
+@import './../../styles/partials/mixins.scss';
+@import './../../styles/partials/typography.scss';
+@import './../../styles/partials/variables.scss';
+
+.regular {
+    font-weight: 400;;
+    
+    
+
+}
+
+.medium {
+    font-weight: 500;
+}
+
+.black {
+    font-weight: 900;
+    
+    
+
+}
+
+.semi-bold {
+    font-weight: 600;
+    
+    
+
+}
+
+.extra-bold {
+    font-weight: 800;
+    
+    
+
+}
+
+.bold {
+    font-weight: 700;
+    
+    
+
+}
+
+.extra-light {
+    font-weight: 200;
+    
+    
+
+}
+
+.circle-text {
+    border-radius: 10px;
+    border-color: $black !important;
+    border-width: 4px;
+    display: flex;
+  align-items: center;
+  text-align: center;
+  background-color: transparent;
+}

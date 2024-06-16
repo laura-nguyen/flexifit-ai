@@ -16,8 +16,9 @@ header{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12pt;
-  font-family: Poppins, Segoe UI, Tahoma, sans-serif;
+  font-size: 12px;
+  position: sticky;
+
 }
 
 .header__logo {
