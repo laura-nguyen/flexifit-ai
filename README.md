@@ -16,8 +16,7 @@ Flexifit AI is designed for busy professionals and individuals who spend a lot o
 
 - **Personalized Workout Programs**: Tailored workout routines based on user preferences and fitness levels.
 - **Real-Time Rep Counting**: Uses webcam and AI to count reps and ensure proper form.
-- **Exercise Guidance**: Provides visual and audio cues to help users perform exercises correctly.
-- **Progress Tracking**: Tracks user progress over time, including reps, sets, and improvements in form.
+- **Form Feedback**: Provide detailed feedback on user form and suggestions for improvement.
 - **User Accounts**: Allows users to sign up, log in, and save their workout history and preferences.
 
 ## Implementation
@@ -41,7 +40,6 @@ Flexifit AI is designed for busy professionals and individuals who spend a lot o
 ### APIs
 
 - **External APIs**:
-  - Foodvisor API (for potential future integration to provide nutritional advice based on workout data)
   - Any other relevant fitness or health-related APIs
 
 ### Sitemap
@@ -121,4 +119,4 @@ Flexifit AI includes user authentication and authorization features, allowing us
 
 - **Workout Summary Sharing**: Allow users to share their workout summaries on social media or with friends.
 - **Additional Exercises**: Expand the exercise library to include more routines like push-ups and planks.
-- **Form Feedback**: Provide detailed feedback on user form and suggestions for improvement.
+- **Progress Tracking**: Tracks user progress over time, including reps, sets, and improvements in form.

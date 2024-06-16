@@ -1,4 +1,25 @@
-.webcam, .canvas {
+.main__container {
     display: flex;
-    justify-content: center;
+    width: 100%;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
 }
+.webcam-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+
+  }
+
+  
+  .info-container {
+    position: absolute;
+    color: white;
+    top: 500px;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: pre-wrap;
+  }
