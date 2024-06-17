@@ -120,19 +120,7 @@ const Test = () => {
                     
                 }} />
                 
-                <canvas ref={canvasRef} style={{
-                    position: "relative",
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    textAlign: "center",
-                    zindex: 8,
-                    width: 640,
-                    height: 480,
-                    transform: "scaleX(-1)" // Mirror the webcam video
-                }} />
+                <canvas ref={canvasRef} className="canvas-mirror"  />
                 
             </div>
             <div>

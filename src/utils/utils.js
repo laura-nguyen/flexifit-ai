@@ -17,9 +17,9 @@
 import * as posenet from "@tensorflow-models/posenet";
 import * as tf from "@tensorflow/tfjs";
 
-const color = "aqua";
+const color = "#a3d860";
 const boundingBoxColor = "red";
-const lineWidth = 2;
+const lineWidth = 8;
 
 export const tryResNetButtonName = "tryResNetButton";
 export const tryResNetButtonText = "[New] Try ResNet50";

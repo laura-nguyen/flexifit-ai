@@ -9,6 +9,7 @@
   list-style: none;
   box-sizing: border-box;
   font-family: 'Nohemi', 'Helvetica', 'Arial', sans-serif;
+  color: $black;
 
 }
 
@@ -45,24 +46,57 @@ h3 {
 
 }
 
-// h4 {
-//   font-size: 1.5rem;
-//   line-height: 2rem;
+h4 {
+  font-size: 1.5rem;
+  line-height: 2rem;
 
-//   @include tablet {
-//     font-size: 2.0625rem;
-//     line-height: 2.75rem;
-//   }
+  @include tablet {
+    font-size: 24px;
+    line-height: 2.75rem;
+  }
 
-// }
+}
+
+h5 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  display: inline-block;
+  padding: 10px 20px; // Adjust the padding to your preference
+  border-radius: 50px; // Adjust the border-radius to create the oval shape
+  text-align: center;
+  border: solid $black 2px;
+
+  @include tablet {
+    font-size: 22px;
+    line-height: 2.75rem;
+  }
+
+}
 
 p {
-  font-size: 1rem;
+  font-size: 22px;
 
 
   @include tablet {
     font-size: 1.125rem;
+    font-size: 20px;
 
   }
+
+}
+
+button {
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 50px;
+  background-color: $lime-green;
+  @include tablet {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: $white;
+  }
+
 
 }
