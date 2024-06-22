@@ -2,6 +2,7 @@
 @import './../../styles/partials/typography.scss';
 @import './../../styles/partials/variables.scss';
 
+
 .regular {
     font-weight: 400;;
     
@@ -56,4 +57,73 @@
   align-items: center;
   text-align: center;
   background-color: $off-white;
+}
+
+.main {
+    margin: 1rem;
+    @include tablet {
+        
+        margin: 3rem 2.25rem;
+    }
+    @include desktop {
+        max-width: 80rem;
+        margin: 2.25rem auto;
+    }
+}
+
+.main {
+    @include tablet {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2.25rem;
+    }
+}
+
+.about {
+    margin: 1rem;
+    @include tablet {
+        margin: 3rem 2.25rem;
+    }
+
+    @include desktop {
+        max-width: 80rem;
+        margin: 0 auto;
+    }
+}
+
+.main__img {
+    border-radius: 25px;
+    border: $black 2px solid;
+}
+
+.value-props {
+    margin: 1rem;
+    @include tablet {
+        margin: 3rem 2.25rem;
+    }
+
+    @include desktop {
+        max-width: 80rem;
+        margin: 0 auto;
+    }
+
+}
+
+.about__list {
+    display: flex;
+    flex-direction: column;
+   
+    @include tablet {
+        flex-direction: row;
+        justify-content: space-between;
+        gap: 2.25rem;
+    }
+}
+
+.about__card {
+    border-radius: 25px;
+    border: $black 2px solid;
+    padding: 2.25rem;
+
 }

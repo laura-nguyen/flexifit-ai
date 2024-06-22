@@ -1,9 +1,22 @@
+@import './../../styles/partials/mixins.scss';
+@import './../../styles/partials/typography.scss';
+@import './../../styles/partials/variables.scss';
+
 .main__container {
     display: flex;
     width: 100%;
     position: relative;
     justify-content: space-between;
     align-items: center;
+    @include desktop {
+      max-width: 80rem;
+      margin: 2.25rem auto;
+    }
+}
+
+.main__left {
+  display: flex;
+  flex-direction: column;
 }
 .canvas-mirror {
     position: relative;

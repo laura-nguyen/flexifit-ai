@@ -1,0 +1,14 @@
+@import './../../styles/partials/mixins.scss';
+@import './../../styles/partials/typography.scss';
+@import './../../styles/partials/variables.scss';
+
+
+.footer {
+    background-color: $lime-green;
+    border-top: solid 2px black;
+    padding: 1rem;
+    @include tablet {
+        display: flex;
+        justify-content: space-between;
+    }
+}

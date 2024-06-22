@@ -13,12 +13,17 @@
 
 }
 
+body {
+  background-color: $off-white;
+}
+
 h1 {
   font-size: 1.5rem;
  
 
   @include tablet {
     font-size: 6rem;
+    line-height: 7rem;
  
   }
 

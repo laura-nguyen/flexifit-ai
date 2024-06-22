@@ -102,32 +102,34 @@ const Test = () => {
 
     return (
         <main className="main__container">
-            <div className="webcam__container">
-            <Webcam ref={webcamRef} style={{
-                    // position: "absolute",
-                    width: "0.1px",
-                 
-                    // marginLeft: "auto",
-                    // marginRight: "auto",
-                    // left: 0,
-                    // top: 0,
-                    // right: 0,
-                    textAlign: "center",
-                    zindex: 9,
-                    // width: 640,
-                    // height: 480,
-                    transform: "scaleX(-1)", // Mirror the webcam video
-                    
-                }} />
+            <div className="main__left">
+                <div className="webcam__container">
+                <Webcam ref={webcamRef} style={{
+                        // position: "absolute",
+                        width: "0.1px",
                 
-                <canvas ref={canvasRef} className="canvas-mirror"  />
+                        // marginLeft: "auto",
+                        // marginRight: "auto",
+                        // left: 0,
+                        // top: 0,
+                        // right: 0,
+                        textAlign: "center",
+                        zindex: 9,
+                        // width: 640,
+                        // height: 480,
+                        transform: "scaleX(-1)", // Mirror the webcam video
                 
-            </div>
-            <div>
-                    <div>Reps: {counter}</div>
-                    <div>Stage: {stage}</div>
-                    <div>Angle: {angle.toFixed(2)}</div>
-            
+                    }} />
+                
+                    <canvas ref={canvasRef} className="canvas-mirror"  />
+                
+                </div>
+                <div>
+                        <div>Reps: {counter}</div>
+                        <div>Stage: {stage}</div>
+                        <div>Angle: {angle.toFixed(2)}</div>
+                
+                </div>
             </div>
         </main>
     );
