@@ -1,144 +1,139 @@
-import React, { useRef, useEffect } from "react";
-import "./Yoga.scss";
+import { useRef, useState, useEffect } from "react";
+import * as posenet from "@tensorflow-models/posenet";
+import Webcam from "react-webcam";
+import { drawKeypoints, drawSkeleton, calculateAngle } from "../../utils/utils.js";
+import "./Test.scss"
 
-const Yoga = () => {
-  const canvasRef = useRef(null);
+const Test = () => {
+    const webcamRef = useRef(null);
+    const canvasRef = useRef(null);
+    const [pose, setPose] = useState(null);
+    const [counter, setCounter] = useState(0);
+    const [stage, setStage] = useState('down');
+    const [angle, setAngle] = useState(0);
+    const canCountRef = useRef(true); // useRef to manage canCount
+    
+    useEffect(() => {
+        runPosenet();
+    }, []);
 
-  useEffect(() => {
-    let video;
-    let poseNet;
-    let pose;
-    let skeleton;
+    const runPosenet = async () => {
+        const net = await posenet.load({
+            architecture: 'MobileNetV1',
+            outputStride: 16,
+            inputResolution: { width: 640, height: 480 },
+            multiplier: 0.75
+        });
 
-    let brain;
-    let poseLabel = "";
-
-    let state = "waiting";
-    let targetLabel;
-
-    const sketch = (p) => {
-      p.setup = () => {
-        p.createCanvas(640, 480).parent(canvasRef.current);
-        video = p.createCapture(p.VIDEO);
-        video.hide();
-        poseNet = ml5.poseNet(video, modelLoaded);
-        poseNet.on("pose", gotPoses);
-
-        let options = {
-          inputs: 34,
-          outputs: 4,
-          task: "classification",
-          debug: true,
-        };
-        brain = ml5.neuralNetwork(options);
-
-        const modelInfo = {
-          model: "./../../model/model.json",
-          metadata: "./../../model/model_meta.json",
-          weights: "./../../model/model.weights.bin",
-        };
-        brain.load(modelInfo, brainLoaded);
-      };
-
-      p.draw = () => {
-        p.push();
-        p.translate(video.width, 0);
-        p.scale(-1, 1);
-        p.image(video, 0, 0, video.width, video.height);
-
-        if (pose) {
-          for (let i = 0; i < skeleton.length; i++) {
-            let a = skeleton[i][0];
-            let b = skeleton[i][1];
-            p.strokeWeight(2);
-            p.stroke(0);
-            p.line(a.position.x, a.position.y, b.position.x, b.position.y);
-          }
-          for (let i = 0; i < pose.keypoints.length; i++) {
-            let x = pose.keypoints[i].position.x;
-            let y = pose.keypoints[i].position.y;
-            p.fill(0);
-            p.stroke(255);
-            p.ellipse(x, y, 16, 16);
-          }
-        }
-        p.pop();
-
-        p.fill(255, 0, 255);
-        p.noStroke();
-        p.textSize(100);
-        p.textAlign(p.CENTER, p.CENTER);
-        p.text(poseLabel, p.width / 2, p.height / 2);
-      };
+        const interval = setInterval(() => {
+            detect(net);
+        }, 100);
+        return () => clearInterval(interval);
     };
 
-    new p5(sketch);
+    const detect = async (net) => {
+        if (
+            typeof webcamRef.current !== "undefined" &&
+            webcamRef.current !== null &&
+            webcamRef.current.video.readyState === 4
+        ) {
+            const video = webcamRef.current.video;
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
 
-    function modelLoaded() {
-      console.log("poseNet ready");
-    }
+            webcamRef.current.video.width = videoWidth;
+            webcamRef.current.video.height = videoHeight;
 
-    function brainLoaded() {
-      console.log("pose classification ready!");
-      classifyPose();
-    }
+            const pose = await net.estimateSinglePose(video, {
+                flipHorizontal: false
+            });
+            setPose(pose);
 
-    function classifyPose() {
-      if (pose) {
-        let inputs = [];
-        for (let i = 0; i < pose.keypoints.length; i++) {
-          let x = pose.keypoints[i].position.x;
-          let y = pose.keypoints[i].position.y;
-          inputs.push(x);
-          inputs.push(y);
+            drawCanvas(pose, video, videoWidth, videoHeight, canvasRef);
+            countReps(pose);
         }
-        brain.classify(inputs, gotResult);
-      } else {
-        setTimeout(classifyPose, 100);
-      }
-    }
+    };
 
-    function gotResult(error, results) {
-      if (results && results[0].confidence > 0.75) {
-        const sketchLabel = results[0].label.toUpperCase();
-        if (sketchLabel === "A") {
-          poseLabel = "overhead";
-        } else if (sketchLabel === "B") {
-          poseLabel = "right stretch";
-        } else if (sketchLabel === "C") {
-          poseLabel = "left stretch";
+    const countReps = (pose) => {
+        const confidenceThreshold = 0.35; // Set a confidence threshold
+        const leftShoulder = pose.keypoints.find(point => point.part === 'leftShoulder' && point.score > confidenceThreshold);
+        const leftElbow = pose.keypoints.find(point => point.part === 'leftElbow' && point.score > confidenceThreshold);
+        const leftWrist = pose.keypoints.find(point => point.part === 'leftWrist' && point.score > confidenceThreshold);
+    
+        if (leftShoulder && leftElbow && leftWrist) {
+            const angle = calculateAngle(leftShoulder.position, leftElbow.position, leftWrist.position);
+            setAngle(angle); 
+    
+            if (angle > 130) {
+                setStage("down");
+                canCountRef.current = true; // Allow counting on the next up
+                console.log('Stage changed to down');
+            } else if (angle < 50 && stage === 'down' && canCountRef.current) {
+                setStage("up");
+                setCounter(prevCounter => {
+                    console.log('Reps counted:', prevCounter + 1);
+                    return prevCounter + 1;
+                });
+                canCountRef.current = false; // Prevent counting until angle is greater than 140
+                console.log('Stage changed to up');
+            }
         } else {
-          poseLabel = "overhead right stretch";
+            console.log("Key points not detected or not confident enough");
         }
-      }
-      classifyPose();
-    }
-
-    function gotPoses(poses) {
-      if (poses.length > 0) {
-        pose = poses[0].pose;
-        skeleton = poses[0].skeleton;
-        if (state === "collecting") {
-          let inputs = [];
-          for (let i = 0; i < pose.keypoints.length; i++) {
-            let x = pose.keypoints[i].position.x;
-            let y = pose.keypoints[i].position.y;
-            inputs.push(x);
-            inputs.push(y);
-          }
-          let target = [targetLabel];
-          brain.addData(inputs, target);
-        }
-      }
-    }
-
-    return () => {
-      // Clean up on component unmount
-      video.remove();
     };
-  }, []);
+    
 
-  return <div ref={canvasRef}></div>;
+    const drawCanvas = (pose, video, videoWidth, videoHeight, canvas) => {
+        const ctx = canvas.current.getContext("2d");
+        canvas.current.width = videoWidth;
+        canvas.current.height = videoHeight;
+
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.translate(-videoWidth, 0);
+        ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+        ctx.restore();
+
+        ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+        drawKeypoints(pose.keypoints, 0.6, ctx);
+        drawSkeleton(pose.keypoints, 0.7, ctx);
+
+    };
+
+    return (
+        <main className="main__container">
+            <div className="main__left">
+                <div className="webcam__container">
+                <Webcam ref={webcamRef} style={{
+                        // position: "absolute",
+                        width: "0.1px",
+                
+                        // marginLeft: "auto",
+                        // marginRight: "auto",
+                        // left: 0,
+                        // top: 0,
+                        // right: 0,
+                        textAlign: "center",
+                        zindex: 9,
+                        // width: 640,
+                        // height: 480,
+                        transform: "scaleX(-1)", // Mirror the webcam video
+                
+                    }} />
+                
+                    <canvas ref={canvasRef} className="canvas-mirror"  />
+                
+                </div>
+                <div>
+                        <div>Reps: {counter}</div>
+                        <div>Stage: {stage}</div>
+                        <div>Angle: {angle.toFixed(2)}</div>
+                
+                </div>
+            </div>
+        </main>
+    );
 };
 
-export default Yoga;
+export default Test;
+``
